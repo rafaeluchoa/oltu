@@ -58,6 +58,10 @@ public abstract class OAuthClientResponse {
     public void setHeaders(Map<String, List<String>> headers) {
         this.headers = headers;
     }
+    
+    public String getBody() {
+		return body;
+	}
 
     /**
      * Allows setting the response body to a String value.
@@ -119,7 +123,7 @@ public abstract class OAuthClientResponse {
         try {
             init(OAuthUtils.saveStreamAsString(body), contentType, responseCode);
         } catch (final IOException e) {
-            throw OAuthProblemException.error(e.getMessage());
+            throw OAuthProblemException.error(e.getMessage()).cause(e);
         }
     }
 

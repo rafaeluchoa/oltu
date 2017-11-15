@@ -33,12 +33,15 @@ import org.apache.oltu.oauth2.common.utils.OAuthUtils;
  */
 public class OAuthProblemException extends Exception {
 
-    private String error;
+    private static final long serialVersionUID = 1L;
+	
+	private String error;
     private String description;
     private String uri;
     private String state;
     private String scope;
     private String redirectUri;
+    private String body;
 
     private int responseStatus;
 
@@ -57,10 +60,6 @@ public class OAuthProblemException extends Exception {
 
     public static OAuthProblemException error(String error) {
         return new OAuthProblemException(error);
-    }
-
-    public static OAuthProblemException error(String error, String description) {
-        return new OAuthProblemException(error, description);
     }
 
     public OAuthProblemException description(String description) {
@@ -92,6 +91,16 @@ public class OAuthProblemException extends Exception {
         parameters.put(name, value);
         return this;
     }
+    
+    public OAuthProblemException body(String value) {
+        this.body = value;
+        return this;
+    }
+    
+    public OAuthProblemException cause(Throwable e) {
+		initCause(e);
+		return this;
+	}
 
     public String getError() {
         return error;
@@ -112,6 +121,10 @@ public class OAuthProblemException extends Exception {
     public String getScope() {
         return scope;
     }
+    
+    public String getBody() {
+		return body;
+	}
 
     public int getResponseStatus() {
         return responseStatus == 0 ? 400 : responseStatus;
@@ -157,6 +170,10 @@ public class OAuthProblemException extends Exception {
         if (!OAuthUtils.isEmpty(scope)) {
             b.append(", ").append(scope);
         }
+        
+        if (!OAuthUtils.isEmpty(body)) {
+            b.append(", ").append(body);
+        }
 
         return b.toString();
     }
@@ -172,6 +189,8 @@ public class OAuthProblemException extends Exception {
                 ", redirectUri='" + redirectUri + '\'' +
                 ", responseStatus=" + responseStatus +
                 ", parameters=" + parameters +
+                ", body='" + body + '\'' +
                 '}';
     }
+	
 }

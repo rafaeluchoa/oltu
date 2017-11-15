@@ -73,8 +73,11 @@ public class OAuthJSONAccessTokenResponse extends OAuthAccessTokenResponse {
             this.body = body;
             parameters = JSONUtils.parseJSON(body);
         } catch (Throwable e) {
-            throw OAuthProblemException.error(OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE,
-                "Invalid response! Response body is not " + OAuth.ContentType.JSON + " encoded");
+            throw OAuthProblemException
+            	.error(OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE)
+            	.description("Invalid response! Response body is not " + OAuth.ContentType.JSON + " encoded")
+            	.cause(e)
+            	.body(body);
         }
     }
 

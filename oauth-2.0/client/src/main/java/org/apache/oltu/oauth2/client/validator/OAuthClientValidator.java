@@ -60,7 +60,14 @@ public abstract class OAuthClientValidator {
             String errorDesc = response.getParam(OAuthError.OAUTH_ERROR_DESCRIPTION);
             String errorUri = response.getParam(OAuthError.OAUTH_ERROR_URI);
             String state = response.getParam(OAuth.OAUTH_STATE);
-            throw OAuthProblemException.error(error).description(errorDesc).uri(errorUri).responseStatus(response.getResponseCode()).state(state);
+            
+            throw OAuthProblemException
+            	.error(error)
+            	.description(errorDesc)
+            	.uri(errorUri)
+            	.responseStatus(response.getResponseCode())
+            	.state(state)
+            	.body(response.getBody());
         }
     }
 
@@ -87,7 +94,7 @@ public abstract class OAuthClientValidator {
         }
 
         if (!missingParameters.isEmpty()) {
-            throw OAuthUtils.handleMissingParameters(missingParameters);
+            throw OAuthUtils.handleMissingParameters(missingParameters, response.getBody());
         }
     }
 

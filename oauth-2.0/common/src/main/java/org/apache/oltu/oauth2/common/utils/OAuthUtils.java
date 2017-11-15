@@ -167,22 +167,33 @@ public final class OAuthUtils {
         return OAuthProblemException.error(OAuthError.TokenResponse.INVALID_REQUEST)
             .description(message);
     }
-
+    
     /**
      * Creates OAuthProblemException that contains set of missing oauth parameters
      *
      * @param missingParams missing oauth parameters
      * @return OAuthProblemException with user friendly message about missing oauth parameters
      */
-
     public static OAuthProblemException handleMissingParameters(Set<String> missingParams) {
+    	return handleMissingParameters(missingParams, null);
+    }
+
+    /**
+     * Creates OAuthProblemException that contains set of missing oauth parameters
+     *
+     * @param missingParams missing oauth parameters
+     * @param body content received from response
+     * @return OAuthProblemException with user friendly message about missing oauth parameters
+     */
+    public static OAuthProblemException handleMissingParameters(Set<String> missingParams, String body) {
         StringBuffer sb = new StringBuffer("Missing parameters: ");
         if (!OAuthUtils.isEmpty(missingParams)) {
             for (String missingParam : missingParams) {
                 sb.append(missingParam).append(" ");
             }
         }
-        return handleOAuthProblemException(sb.toString().trim());
+        
+        return handleOAuthProblemException(sb.toString().trim()).body(body);
     }
 
     public static OAuthProblemException handleBadContentTypeException(String expectedContentType) {
